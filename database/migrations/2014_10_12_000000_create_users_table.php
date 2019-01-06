@@ -22,9 +22,9 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('mobile_phone_verified_at')->nullable();
             $table->string('password');
-            $table->integer('group_id')->unsigned();
+            $table->integer('group_id')->unsigned()->nullable();
             $table->foreign('group_id')
-                ->referencese('id')->on('groups')
+                ->references('id')->on('groups')
                 ->onUpdate('cascade')->onDelete('no action');
             $table->rememberToken();
             $table->timestamps();
