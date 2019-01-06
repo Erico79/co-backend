@@ -18,8 +18,14 @@ class CreateUsersTable extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->string('email')->unique();
+            $table->string('mobile_phone')->unique();
             $table->timestamp('email_verified_at')->nullable();
+            $table->timestamp('mobile_phone_verified_at')->nullable();
             $table->string('password');
+            $table->integer('group_id')->unsigned();
+            $table->foreign('group_id')
+                ->referencese('id')->on('groups')
+                ->onUpdate('cascade')->onDelete('no action');
             $table->rememberToken();
             $table->timestamps();
         });
