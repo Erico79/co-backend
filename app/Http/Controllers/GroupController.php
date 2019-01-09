@@ -20,12 +20,12 @@ class GroupController extends Controller
 
         if (request()->has('group_id')) {
             $group = Group::find(request('group_id'));
-            
+
             $validator->after(function ($validator) {
                 $group_exists = Group::where('id', '<>', request('group_id'))->where('name', request('name'))->count();
 
                 if ($group_exists) 
-                    $validator->errors()->add('field', 'Something is wrong with this field!');
+                    $validator->errors()->add('name', 'Group Name already exists!');
             });
         }
 
