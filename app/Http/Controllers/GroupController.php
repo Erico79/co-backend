@@ -15,14 +15,20 @@ class GroupController extends Controller
         ]);
 
         if (!$validator->fails()) {
-            $group = Group::create(request()->all());
+            if ($group_id = request('group_id')) {
+                $group = Group::find(request('group_id'));
+                $group->name = request('name');
+                $group->no_of_members = request('no_of_members');
+                $group->save();
+            } else {
+                $group = Group::create(request()->all());
+            }
 
-            return response(['success' => true, 'message' => 'Your Group has been registered!', 'group' => $group]);
+            return response()->json(['message' => 'Your Group has been registered!', 'group' => $group]);
         } else {
             return response()->json([
-                'success' => false,
                 'errors' => $validator->getMessageBag()->toArray(),
-            ]);
+            ])->setStatusCode(400);
         }
     }
 }

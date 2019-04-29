@@ -26,6 +26,10 @@ class CreateUsersTable extends Migration
             $table->foreign('group_id')
                 ->references('id')->on('groups')
                 ->onUpdate('cascade')->onDelete('no action');
+            $table->integer('role_id')->unsigned();
+            $table->foreign('role_id')
+                ->references('id')->on('roles')
+                ->onUpdate('cascade')->onDelete('no action');
             $table->rememberToken();
             $table->timestamps();
         });
