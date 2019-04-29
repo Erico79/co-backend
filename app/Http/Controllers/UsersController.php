@@ -42,10 +42,14 @@ class UsersController extends Controller
                     'email' => request('email'),
                     'mobile_phone' => request('mobile_phone'),
                     'password' => bcrypt(request('password')),
-                    'role_id' => Role::systemAdmin()->id,
+                    'role_id' => Role::groupAdmin()->id,
                 ]);
 
                 Group::find(request('group_id'))->users()->save($user);
+            }
+
+            if ($user) {
+                // TODO dispatch event for sending otp
             }
 
             return response()->json($user);

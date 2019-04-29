@@ -18,7 +18,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('register/group', 'GroupController@register');
+Route::post('register/admin', 'UsersController@store');
 
 Route::group(['middleware' => 'auth:api', 'prefix' => 'register'], function() {
-    Route::post('admin', 'UsersController@store');
+
 });
