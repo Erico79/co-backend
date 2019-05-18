@@ -18,9 +18,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('register/group', 'GroupController@register');
-Route::post('register/admin', 'UsersController@store')->middleware('cors');
+Route::post('register/admin', 'UsersController@store');
 
 Route::group(['middleware' => 'auth:api'], function() {
   Route::post('validate/otp', 'UsersController@validateOTP');
   Route::post('resend/otp/{mobile_no}', 'UsersController@resendOTP');
+  Route::post('register/accounts/{group}', 'GroupAccountController@store');
 });

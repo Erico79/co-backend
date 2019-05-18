@@ -9,6 +9,10 @@ class Group extends Model
     protected $guarded = ['id'];
 
     public function users() {
-        return $this->hasMany(User::class);
+      return $this->hasMany(User::class);
+    }
+
+    public function groupAccounts() {
+      return $this->hasMany(GroupAccount::class);
     }
 }

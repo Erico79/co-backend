@@ -8,7 +8,7 @@ use App\Role;
 use App\User;
 use App\Group;
 use Illuminate\Database\QueryException;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Validator;
 use App\Events\GroupAdminRegistered;
 
@@ -18,13 +18,13 @@ class UsersController extends Controller
         $validator = Validator::make(request()->all(), [
           'first_name' => 'required',
           'last_name' => 'required',
-          'email' => 'required|email|unique:users',
-          'mobile_phone' => 'required|min:12|unique:users',
+          'email' => 'required|email',
+          'mobile_phone' => 'required|min:12',
           'password' => 'required|confirmed',
           'group_id' => 'required|numeric'
         ]);
 
-        $otp = rand(1000, 9999);
+        $otp = App::environment() === 'local' ? 1111 : rand(1000, 9999);
 
         if ($validator->fails()) {
           return response()->json([
@@ -34,25 +34,25 @@ class UsersController extends Controller
           $user = null;
 
           try {
-//            if (User::emailExists(request('email')) ||
-//              User::mobileNoExists(request('mobile_phone'))) {
-//              $user = User::where('email', request('email'))
-//                ->orWhere('mobile_phone', request('mobile_phone'))
-//                ->first();
-//
-//              if ($user->email !== request('email')) {
-//                $user->email = request('email');
-//                $user->save();
-//              }
-//
-//              if ($user->mobile_phone !== request('mobile_phone')) {
-//                $user->mobile_phone = request('mobile_phone');
-//                $user->save();
-//              }
-//
-//              event(new GroupAdminRegistered($user, $otp));
-//              return response()->json(['error_code' => 'ADMIN_EXISTS']);
-//            }
+            if (User::emailExists(request('email')) ||
+              User::mobileNoExists(request('mobile_phone'))) {
+              $user = User::where('email', request('email'))
+                ->orWhere('mobile_phone', request('mobile_phone'))
+                ->first();
+
+              if ($user->email !== request('email')) {
+                $user->email = request('email');
+                $user->save();
+              }
+
+              if ($user->mobile_phone !== request('mobile_phone')) {
+                $user->mobile_phone = request('mobile_phone');
+                $user->save();
+              }
+
+              event(new GroupAdminRegistered($user, $otp));
+              return response()->json(['error_code' => 'ADMIN_EXISTS']);
+            }
 
             if ($user_id = request('user_id')) {
               $user = User::find($user_id);
